@@ -1,8 +1,13 @@
 #!/bin/sh
 
 if [ -n "$LICENSE_URL" ]; then
-    file="/app/litellm/proxy/auth/litellm_license.py"
-    [ -f "$file" ] && sed -i "s|https://license.litellm.ai|${LICENSE_URL}|g" "$file"
+    # 查找所有 litellm_license.py 文件
+    find / -type f -name "litellm_license.py" 2>/dev/null | while read -r file; do
+        echo "Found license file: $file"
+        # 替换URL
+        sed -i "s|https://license.litellm.ai|${LICENSE_URL}|g" "$file"
+        echo "Updated license URL in $file"
+    done
 fi
 
 if [ -n "$MODEL_CONFIG_URL" ]; then
